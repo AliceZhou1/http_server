@@ -51,6 +51,7 @@ void ThreadPool::addTask(std::shared_ptr<Task> _task)
 		return isExit();
 	};*/
 	m_taskLists.emplace_back(_task);
+
 	lock.unlock();
 	m_cv.notify_one();
 }
@@ -73,7 +74,7 @@ std::shared_ptr<Task> ThreadPool::getTask()
 
 void ThreadPool::run()
 {
-	while(!isExit())
+	while (!isExit())
 	{
 		auto task = getTask();
 		if (!task)

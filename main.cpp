@@ -78,6 +78,9 @@ int main()
 		{
 			if ((*it)->isExpire)
 			{
+				closesocket((*it)->socket);
+				FD_CLR((*it)->socket, &rfds);
+				std::cerr << "remove : " << (*it)->socket << std::endl;
 				it = clients.erase(it);
 			}
 			else
@@ -107,7 +110,7 @@ int main()
 				std::cerr << "accept failed: " << WSAGetLastError() << std::endl;
 				break;
 			}
-			std::cout << "listen one request!\n";
+			std::cout << "listen one request!"<<client_socket<<std::endl;
 			auto client = std::make_shared<client_s>();
 			client->socket = client_socket;
 			client->isExpire = false;
@@ -118,6 +121,7 @@ int main()
 	// Cleanup
 	clients.clear();
 	closesocket(srvSocket);
+	pool.stop();
 	WSACleanup();
 	return 0;
 }

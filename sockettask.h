@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <mutex>
 
 #define MAX_BUFFER_SIZE 4096
 
@@ -17,6 +18,7 @@ struct client_s
 {
 	SOCKET socket;
 	bool isExpire;//是否失效
+	//std::mutex mutex;//不需要上锁
 };
 
 class SocketTask:public Task

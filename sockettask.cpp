@@ -9,7 +9,9 @@ SocketTask::SocketTask(std::shared_ptr<client_s> _client)
 int SocketTask::run()
 {
 	//读入缓冲区
-	std::cerr <<"start :" << std::this_thread::get_id() << std::endl;
+	//std::unique_lock<std::mutex> lock(m_client->mutex);//可以不用上锁
+	std::cerr << "start socket:" << m_client->socket << std::endl;
+	std::cerr <<"start thread:" << std::this_thread::get_id() << std::endl;
 	char buf[MAX_BUFFER_SIZE];
 	memset(buf, '\0', MAX_BUFFER_SIZE);
 	recv(m_client->socket, buf, MAX_BUFFER_SIZE, 0);
@@ -53,11 +55,11 @@ int SocketTask::run()
 	{
 		closesocket(m_client->socket);
 		m_client->isExpire = true;
-		std::cerr << "close :" << std::this_thread::get_id() << std::endl;
+		std::cerr << "close socket:" << m_client->socket << std::endl;
 
 	}
-	std::cerr << "end :" << std::this_thread::get_id() << std::endl;
-
+	std::cerr << "end socket:" << m_client->socket << std::endl;
+	std::cerr << "end thread:" << std::this_thread::get_id() << std::endl;
 	return 0;
 }
 
