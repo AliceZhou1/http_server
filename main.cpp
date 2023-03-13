@@ -67,7 +67,7 @@ int main()
 	pool.init(10);
 	pool.start();
 	//存储当前可用client
-	std::vector<std::shared_ptr<client_s>> clients;
+	std::list<std::shared_ptr<client_s>> clients;
 	fd_set rfds;
 	FD_ZERO(&rfds);
 	FD_SET(srvSocket, &rfds);
@@ -93,12 +93,12 @@ int main()
 			std::cerr << "select failed: " << WSAGetLastError() << std::endl;
 			break;
 		}
-		for (int i = 0; i < clients.size(); i++)
+		for (auto it : clients)
 		{
-			if (FD_ISSET(clients[i]->socket, &tmp_fds))
+			if (FD_ISSET(it->socket, &tmp_fds))
 			{
-				auto task = std::make_shared<SocketTask>(clients[i]);
-				std::cerr <<total++<<"-----------------------" << task->m_client->socket << std::endl;
+				auto task = std::make_shared<SocketTask>(it);
+				//std::cerr << total++ << "-----------------------" << task->m_client->socket << std::endl;
 				pool.addTask(task);
 			}
 		}
@@ -110,7 +110,7 @@ int main()
 				std::cerr << "accept failed: " << WSAGetLastError() << std::endl;
 				break;
 			}
-			std::cout << "listen one request!"<<client_socket<<std::endl;
+			std::cout << "listen one request:" << client_socket << std::endl;
 			auto client = std::make_shared<client_s>();
 			client->socket = client_socket;
 			client->isExpire = false;
