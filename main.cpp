@@ -30,9 +30,6 @@ int main()
 	//服务器地址和客户端地址
 	sockaddr_in srvAddr;
 
-	//会话socket，负责和client进程通信
-	SOCKET sessionSocket;
-
 	//创建监听socket
 	srvSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (srvSocket != INVALID_SOCKET)
@@ -53,7 +50,7 @@ int main()
 	if (rtn != SOCKET_ERROR)
 		printf("Socket listen Ok!\n");
 
-	u_long blockMode = 1;//将srvSock设为非阻塞模式以监听客户连接请求
+	//u_long blockMode = 1;//将srvSock设为非阻塞模式以监听客户连接请求
 
 	//if ((rtn = ioctlsocket(srvSocket, FIONBIO, &blockMode) == SOCKET_ERROR))
 	//{ //FIONBIO：允许或禁止套接口s的非阻塞模式。
@@ -64,7 +61,7 @@ int main()
 
 	//启动线程池
 	ThreadPool pool;
-	pool.init(10);
+	pool.init(16);
 	pool.start();
 	//存储当前可用client
 	std::list<std::shared_ptr<client_s>> clients;

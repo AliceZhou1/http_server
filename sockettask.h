@@ -18,7 +18,7 @@ struct client_s
 {
 	SOCKET socket;
 	bool isExpire;//是否失效
-	//std::mutex mutex;//不需要上锁
+	std::mutex mutex;//不需要上锁
 };
 
 class SocketTask:public Task
@@ -28,7 +28,7 @@ public:
 	int run();
 //private:
 	std::shared_ptr<client_s> m_client;
-	int writeBuf(char*& buf, std::string filepath);
+	int writeBuf(char*& buf, std::string& filepath);
 	std::string getFilePath(std::string _headrow);//通过首部行获取文件完整路径名
 };
 #endif //__SOCKETTASK_H__
